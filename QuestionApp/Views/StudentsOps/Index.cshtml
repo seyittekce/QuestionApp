@@ -1,0 +1,183 @@
+﻿@model IEnumerable<QuestionApp.Models.Students>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    td {
+        white-space: nowrap;
+        overflow: hidden;
+        -o-text-overflow: ellipsis;
+        -ms-text-overflow: ellipsis;
+        text-overflow: ellipsis;
+        max-width: 200px;
+    }
+    input {
+        border-radius: 25px;
+        padding: 7px 14px;
+        background-color: transparent;
+        border: solid 1px rgba(0, 0, 0, 0.2);
+        width: 200px;
+        box-sizing: border-box;
+        color: #2e2e2e;
+        margin-bottom: 5px
+    }
+    input {
+        border-radius: 25px;
+        padding: 7px 14px;
+        background-color: transparent;
+        border: solid 1px rgba(0, 0, 0, 0.2);
+        width: 200px;
+        box-sizing: border-box;
+        color: #2e2e2e;
+        margin-bottom: 5px
+    }
+        input:focus {
+            outline: none;
+            border-color: #aaa
+        }
+    select {
+        border-radius: 25px;
+        padding: 7px 14px;
+        background-color: transparent;
+        border: solid 1px rgba(0, 0, 0, 0.2);
+        box-sizing: border-box;
+        color: #2e2e2e;
+        margin-bottom: 5px
+    }
+    select {
+        border-radius: 25px;
+        padding: 7px 14px;
+        background-color: transparent;
+        border: solid 1px rgba(0, 0, 0, 0.2);
+        box-sizing: border-box;
+        color: #2e2e2e;
+        margin-bottom: 5px
+    }
+        select:focus {
+            outline: none;
+            border-color: #aaa
+        }
+</style>
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <table id="datatable" class="table tables table-hover table-sm " style="width: 100%;" role="grid" aria-describedby="scroll_ver_dynamic_hei_info">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.FirsName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.LastName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.NickName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Mail)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.PhoneNumber)
+                            </th>
+                            <th></th>
+                            <th></th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                        <tr>
+                          
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ID)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.FirsName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.LastName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.NickName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Mail)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PhoneNumber)
+                            </td>
+                            <td>
+                                <a href="/StudentsOps/Details/@item.ID" data-toggle="tooltip" data-placement="top" title="" data-original-title="Detaylar"><i class="fa fa-eye color-muted m-r-5"></i> </a>
+
+                            </td>
+                            <td>
+                                @if (item.Verified == false)
+                                {
+                                    using (Html.BeginForm())
+                                    {
+                                        @Html.AntiForgeryToken()
+
+                                        <input type="hidden" value="@item.ID" name="ID" />
+                                        <input type="submit" value="Kayıt Et" name="ID" class="btn btn-default" />
+
+                                    }
+                                }
+                            </td>
+
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+    @Scripts.Render("~/bundles/Datatable")
+    <script>
+        $(document).ready(function () {
+            $('#datatable').DataTable({
+                "language": {
+                    "url": "/Scripts/Turkish.json"
+                },
+                "dom": ' <"search"f><"bottom"l>rt<"bottom"ip><"clear"><"top"B>',
+                buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        exportOptions:
+                        {
+                            columns: [0, 1, 2],
+                        },
+                        text: '<i class="fa fa-file-excel-o"></i>',
+                        titleAttr: 'Excel',
+                        className: 'btn btn-outline-secondary'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        pageSize: 'LEGAL',
+                        exportOptions:
+                        {
+                            columns: [0, 1, 2],
+                        },
+                        text: '<i class="fa fa-file-pdf-o"></i>',
+                        titleAttr: 'PDF',
+                        className: 'btn btn-outline-secondary'
+                    },
+                    {
+                        text: '<b>Öğrenci Ekle</b>',
+                        action: function (e, dt, button, config) {
+                            window.location = '/StudentsOps/Create';
+                        },
+                        className: 'btn btn-outline-info'
+                    },
+                ]
+            });
+        });
+    </script>
+}

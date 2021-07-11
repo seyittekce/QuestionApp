@@ -1,0 +1,164 @@
+﻿@model IEnumerable<QuestionApp.Models.Answers>
+
+@{
+    ViewBag.Title = "Cevaplar";
+    Layout = "~/Views/Shared/StudentLayout.cshtml";
+    QuestionApp.Models.DBContext db = new QuestionApp.Models.DBContext();
+    int sayı = 1;
+    int libid = Convert.ToInt32(TempData["QuizID"]);
+    int PuanHesapla()
+    {
+        var Bul = db.Answers.Where(x => x.LibraryID == libid && x.StudentID == QuestionApp.Models.Addon.StudentSide.ID).ToList();
+        int toplamsoru = 0;
+        int dogrusoru = 0;
+        int yanlissoru = 0;
+        foreach (var item in Bul)
+        {
+            if (item.Type != "Paragraph")
+            {
+                toplamsoru++;
+                if (item.Pass == true)
+                {
+                    dogrusoru++;
+                }
+                else
+                {
+                    yanlissoru++;
+                }
+            }
+        }
+        int hes = dogrusoru * 100;
+        return hes / toplamsoru;
+    }
+    int hesapla = PuanHesapla();
+}
+
+<div class="row">
+    <div class="col-lg-12 col-md-12">
+        <center>
+            <h2>Alınan Puan</h2>
+            <h1>@hesapla</h1>
+        </center>
+        <div class="card">
+            <div class="card-header">
+                <strong class="card-title">Cevaplar</strong>
+                <strong class="float-right"></strong>
+            </div>
+            <div class="table-stats order-table ov-h">
+                <table class="table table-responsive-lg">
+                    <thead>
+                        <tr>
+                            <th class="serial">#</th>
+                            <th class="avatar">Verilen Cevap</th>
+                            <th>Doğru Cevap</th>
+                            <th>Açıklama</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            libid = item.LibraryID;
+                            var ss = db.QuizLibrary.Find(item.LibraryID);
+                            var Split = ss.Questions.Split('|').ToArray();
+                            string cevap = "";
+                            string acıklama = "";
+                            string type = "";
+                            if (Split != null)
+                            {
+                                foreach (var sp in Split)
+                                {
+                                    if (sp != null)
+                                    {
+                                        if (sp == item.QuestionID.ToString())
+                                        {
+                                            var cek = db.Question.Find(item.QuestionID);
+                                            type = cek.Type;
+                                            if (cek.Type == "multiple")
+                                            {
+                                                cevap = cek.answers1;
+                                            }
+                                            else if (cek.Type == "truefalse" && cek.Type == "short")
+                                            {
+                                                foreach (var cevap1 in cek.Answers.Split('|').ToArray())
+                                                {
+                                                    cevap += cevap1;
+                                                }
+                                            }
+                                            else if (cek.Type == "Paragraph")
+                                            {
+                                                cevap = "";
+                                            }
+                                            else
+                                            {
+                                                cevap = cek.Answers;
+                                            }
+                                            acıklama = cek.Explanation;
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (item.Pass == true)
+                            {
+                                <tr data-toggle="modal" data-id="@item.QuestionID" data-target="#@item.ClassID">
+                                    <td class="serial">@sayı</td>
+                                    <td>@item.Answer</td>
+                                    <td>  <span class="name">@cevap</span> </td>
+                                    <td>
+                                        <span class="product">
+                                            <input type="button" class="btn btn-success" id="Questionbutton" value="Göster" />
+                                            <input type="hidden" value="@item.QuestionID" id="QuestionID" />
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-complete">Doğru</span>
+                                    </td>
+                                </tr>
+                            }
+                            else
+                            {
+                                if (item.Type == "Paragraph")
+                                {
+                                    <tr data-toggle="modal" data-id="1" data-target="#@item.ClassID">
+                                        <td class="serial">@sayı</td>
+                                        <td>@item.Answer</td>
+                                        <td>  <span class="name">@cevap</span> </td>
+                                        <td>
+                                            <span class="product">
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="badge badge-warning">DEĞERLENDİRİLİYOR</span>
+                                        </td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    <tr data-toggle="modal" data-id="1" data-target="#@item.ClassID">
+                                        <td class="serial">@sayı</td>
+                                        <td>@item.Answer</td>
+                                        <td>  <span class="name">@cevap</span> </td>
+                                        <td>
+                                            <span class="product">
+                                                <input type="button" class="btn btn-success" id="Questionbutton" value="Göster" />
+                                                <input type="hidden" value="@item.QuestionID" id="QuestionID" />
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="badge badge-pending">Yanlış</span>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            sayı++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+
+}

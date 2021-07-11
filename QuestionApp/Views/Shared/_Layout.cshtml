@@ -1,0 +1,447 @@
+﻿@using QuestionApp.Models.Addon;
+@{
+    QuestionApp.Models.DBContext db = new QuestionApp.Models.DBContext();
+    var settings = db.Settings.FirstOrDefault();
+    if (QuestionApp.Models.Addon.LoginOps.ID<=0)
+    {
+        Response.Redirect("~/Users/login");
+    }
+}
+<!DOCTYPE html>
+<html dir="ltr" lang="tr">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Question App">
+    <meta name="author" content="Turan Bek">
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="~/turanbek.png">
+    <title>@ViewBag.title TB</title>
+    <!-- Custom CSS
+    <link href="~/dist/css/style.min.css" rel="stylesheet">-->
+    <link href="~/dist/css/styles.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+</head>
+<body>
+    <!-- ============================================================== -->
+    <!-- Preloader - style you can find in spinners.css -->
+    <!-- ============================================================== -->
+    @if (settings.Preloader == true)
+    {
+        <div class="preloader">
+            <div class="lds-ripple">
+                <div class="lds-pos"></div>
+                <div class="lds-pos"></div>
+            </div>
+        </div>
+    }
+    <!-- ============================================================== -->
+    <!-- Main wrapper - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    <div id="main-wrapper" data-navbarbg="skin6" data-theme="light" data-layout="@settings.Layout" data-sidebartype="full" data-boxed-layout="full">
+        <!-- ============================================================== -->
+        <!-- Topbar header - style you can find in pages.scss -->
+        <!-- ============================================================== -->
+        <header class="topbar" data-navbarbg="skin6">
+            <nav class="navbar top-navbar navbar-expand-md navbar-light">
+                <div class="navbar-header" data-logobg="@settings.Logo_Background" data-loading-text="Yükleniyor">
+                    <!-- This is for the sidebar toggle which is visible on mobile only -->
+                    <a class="nav-toggler waves-effect waves-light d-block d-md-none" href="javascript:void(0)">
+                        <i class="ti-menu ti-close"></i>
+                    </a>
+                    <!-- ============================================================== -->
+                    <!-- Logo -->
+                    <!-- ============================================================== -->
+                    <div class="navbar-brand">
+                        <a href="~/home/index" class="logo">
+                            <!-- Logo icon -->
+                            <b class="logo-icon">
+                                <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
+                                <!-- Dark Logo icon -->
+                            </b>
+                            <!--End Logo icon -->
+                            <!-- Logo text -->
+                            <span class="logo-text">
+                                <!-- dark Logo text -->
+                              
+                                <img src="~/turanbek.png" alt="Anasayfa" class="dark-logo" height="27" />
+                                <!-- Light Logo text -->
+                                <img src="~/turanbek.png" class="light-logo" alt="homepage" height="27" />
+                            </span>
+                        </a>
+                    </div>
+                    <!-- ============================================================== -->
+                    <!-- End Logo -->
+                    <!-- ============================================================== -->
+                    <!-- ============================================================== -->
+                    <!-- Toggle which is visible on mobile only -->
+                    <!-- ============================================================== -->
+                    <a class="topbartoggler d-block d-md-none waves-effect waves-light" href="javascript:void(0)" data-toggle="collapse" data-target="#navbarSupportedContent"
+                       aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <i class="ti-more"></i>
+                    </a>
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Logo -->
+                <!-- ============================================================== -->
+                <div class="navbar-collapse collapse" id="navbarSupportedContent" data-navbarbg="@settings.Navbar_Background">
+                    <!-- ============================================================== -->
+                    <!-- toggle and nav items -->
+                    <!-- ============================================================== -->
+                    <ul class="navbar-nav float-left mr-auto">
+                        <!-- ============================================================== -->
+                        <!-- Search -->
+                        <!-- ============================================================== -->
+                        <li class="nav-item search-box">
+                            <a class="nav-link waves-effect waves-dark" href="javascript:void(0)">
+                                <div class="d-flex align-items-center">
+                                    <i class="mdi mdi-magnify font-20 mr-1"></i>
+                                    <div class="ml-1 d-none d-sm-block">
+                                        <span>Ara</span>
+                                    </div>
+                                </div>
+                            </a>
+                            @using (Html.BeginForm("search", "Home", FormMethod.Post, new { enctype = "multipart/form-data", @class = "app-search position-absolute" }))
+                            {
+                                <input type="text" name="search" id="search" class="form-control" placeholder="Ara">
+                                <a class="srh-btn">
+                                    <i class="ti-close"></i>
+                                </a>
+                            }
+                        </li>
+                    </ul>
+                    <!-- ============================================================== -->
+                    <!-- Right side toggle and nav items -->
+                    <!-- ============================================================== -->
+                    <ul class="navbar-nav float-right">
+                        <!-- ============================================================== -->
+                        <!-- User profile and search -->
+                        <!-- ==============================================================
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark pro-pic" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="../../assets/images/users/blank.png" alt="user" class="rounded-circle" width="31">@LoginOps.Name @LoginOps.LastName</a>
+        <div class="dropdown-menu dropdown-menu-right user-dd animated">
+            <a class="dropdown-item" href="~/users/profile"><i class="ti-user m-r-5 m-l-5"></i>Profil</a>
+            <a class="dropdown-item" href="~/users/exit"><i class="mdi mdi-exit-to-app m-r-5 m-l-5"></i> Çıkış Yap</a>
+        </div>
+    </li>
+        -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle waves-effect waves-dark pro-pic" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <img src="../../assets/images/users/blank.png" alt="user" class="rounded-circle" width="40">
+                                <span class="m-l-5 font-medium d-none d-sm-inline-block">@LoginOps.Name @LoginOps.LastName <i class="mdi mdi-chevron-down"></i></span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right user-dd animated ">
+                                <span class="with-arrow">
+                                    <span class="bg-primary"></span>
+                                </span>
+                                <div class="d-flex no-block align-items-center p-15 bg-primary text-white m-b-10">
+                                    <div class="">
+                                        <img src="../../assets/images/users/blank.png" alt="user" class="rounded-circle" width="60">
+                                    </div>
+                                    <div class="m-l-10">
+                                        <h4 class="m-b-0">@LoginOps.Name @LoginOps.LastName</h4>
+                                        <p class=" m-b-0">@LoginOps.Mail</p>
+                                    </div>
+                                </div>
+                                <div class="profile-dis scrollable ps-container ps-theme-default" data-ps-id="5f9df760-4e55-180a-0fff-0c3484d41d1e">
+                                    <a class="dropdown-item" href="~/Users/profile">
+                                        <i class="ti-user m-r-5 m-l-5"></i> Hesabım
+                                    </a>
+                                   
+                                    <a  class="dropdown-item" href="javascript:void(0)">
+                                        <i class="ti-email m-r-5 m-l-5"></i> Mail Kutusu
+                                    </a>
+                                    <div class="dropdown-divider"></div>
+                                   
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="~/Users/Exit">
+                                        <i class="fa fa-power-off m-r-5 m-l-5"></i> Çıkış
+                                    </a>
+                                    <div class="dropdown-divider"></div>
+                                    <div class="ps-scrollbar-x-rail" style="left: 0px; bottom: 0px;"><div class="ps-scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps-scrollbar-y-rail" style="top: 0px; right: 3px;"><div class="ps-scrollbar-y" tabindex="0" style="top: 0px; height: 0px;"></div></div>
+                                </div>
+                             
+                            </div>
+                        </li>
+                        <!-- ============================================================== -->
+                        <!-- User profile and search -->
+                        <!-- ============================================================== -->
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <!-- ============================================================== -->
+        <!-- End Topbar header -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <aside class="left-sidebar" data-sidebarbg="@settings.Sidebar_Background">
+            <!-- Sidebar scroll-->
+            <div class="scroll-sidebar">
+                <!-- Sidebar navigation-->
+                <nav class="sidebar-nav">
+                    <ul id="sidebarnav">
+                        <li class="sidebar-item">
+                            <a class="sidebar-link waves-effect waves-dark sidebar-link" href="~/home/index" aria-expanded="false">
+                                <i class="mdi mdi-av-timer"></i>
+                                <span class="hide-menu">Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link waves-effect waves-dark sidebar-link" href="~/vt/index" aria-expanded="false">
+                                <i class="mdi mdi-av-timer"></i>
+                                <span class="hide-menu">Makaleler Videolar</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
+                                <i class="mdi mdi-key"></i>
+                                <span class="hide-menu">Sorular</span>
+                            </a>
+                            <ul aria-expanded="false" class="collapse first-level">
+                                <li class="sidebar-item">
+                                    <a href="~/Question/index" class="sidebar-link">
+                                        <i class="mdi mdi-table"></i>
+                                        <span class="hide-menu"> Soru Tablosu </span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="~/Question/Create" class="sidebar-link">
+                                        <i class="mdi mdi-view-day"></i>
+                                        <span class="hide-menu"> Soru Ekle </span>
+                                    </a>
+                                </li>
+                            </ul>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
+                                <i class="mdi mdi-laptop"></i>
+                                <span class="hide-menu">Kütüphane</span>
+                            </a>
+                            <ul aria-expanded="false" class="collapse first-level">
+                                <li class="sidebar-item">
+                                    <a href="~/Library/index" class="sidebar-link">
+                                        <i class="mdi mdi-table"></i>
+                                        <span class="hide-menu"> Kütüphane </span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="~/Library/create" class="sidebar-link">
+                                        <i class="mdi mdi-creation"></i>
+                                        <span class="hide-menu"> Kütüphane Oluştur </span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
+                                <i class="mdi mdi-floppy"></i>
+                                <span class="hide-menu">Öğrenciler</span>
+                            </a>
+                            <ul aria-expanded="false" class="collapse first-level">
+                                <li class="sidebar-item">
+                                    <a href="~/StudentsOps/index" class="sidebar-link">
+                                        <i class="mdi mdi-table"></i>
+                                        <span class="hide-menu"> Öğrenciler Tablosu</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="~/StudentsOps/index/nonverified" class="sidebar-link">
+                                        <i class="mdi mdi-table"></i>
+                                        <span class="hide-menu"> Doğrulanmamış Öğrenciler </span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="~/StudentsOps/Create" class="sidebar-link">
+                                        <i class="mdi mdi-table"></i>
+                                        <span class="hide-menu">Öğrenci Ekle</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
+                                <i class="mdi mdi-creation"></i>
+                                <span class="hide-menu">Sınıflar</span>
+                            </a>
+                            <ul aria-expanded="false" class="collapse first-level">
+                                <li class="sidebar-item">
+                                    <a href="~/Classes/index" class="sidebar-link">
+                                        <i class="mdi mdi-table"></i>
+                                        <span class="hide-menu"> Sınıflar Tablosu</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="~/Classes/Create" class="sidebar-link">
+                                        <i class="mdi mdi-table"></i>
+                                        <span class="hide-menu">Sınıf Oluştur</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
+                                <i class="mdi mdi-floppy"></i>
+                                <span class="hide-menu">İşlem Kayıtları</span>
+                            </a>
+                            <ul aria-expanded="false" class="collapse first-level">
+                                <li class="sidebar-item">
+                                    <a href="~/logs/index" class="sidebar-link">
+                                        <i class="mdi mdi-table"></i>
+                                        <span class="hide-menu"> Kayıtlar</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="~/logs/ErrorIndex" class="sidebar-link">
+                                        <i class="mdi mdi-table"></i>
+                                        <span class="hide-menu">Hata Kayıtları</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
+                                <i class="mdi mdi-account-settings"></i>
+                                <span class="hide-menu">Kullanıcı Ayarları</span>
+                            </a>
+                            <ul aria-expanded="false" class="collapse first-level">
+                                <li class="sidebar-item">
+                                    <a href="~/users/index" class="sidebar-link">
+                                        <i class="mdi mdi-account-location"></i>
+                                        <span class="hide-menu"> Kullanıcı Tablosu</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="~/users/create" class="sidebar-link">
+                                        <i class="mdi mdi-account-plus"></i>
+                                        <span class="hide-menu"> Kullanıcı Ekle</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
+                                <i class="mdi mdi-settings"></i>
+                                <span class="hide-menu">Ayarlar</span>
+                            </a>
+                            <ul aria-expanded="false" class="collapse first-level">
+                                <li class="sidebar-item">
+                                    <a href="~/Settings/MailSettings" class="sidebar-link">
+                                        <i class="mdi mdi-mailbox"></i>
+                                        <span class="hide-menu"> Mail Gönderim Ayarları </span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="~/Settings/ThemeSettings" class="sidebar-link">
+                                        <i class="mdi mdi-theme-light-dark"></i>
+                                        <span class="hide-menu"> Tema Ayarları </span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+                <!-- End Sidebar navigation -->
+            </div>
+            <!-- End Sidebar scroll-->
+        </aside>
+        <!-- ============================================================== -->
+        <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Page wrapper  -->
+        <!-- ============================================================== -->
+        <div class="page-wrapper">
+            <!-- ============================================================== -->
+            <!-- Bread crumb and right sidebar toggle -->
+            <!-- ============================================================== -->
+            <div class="page-breadcrumb">
+                <div class="row">
+                    <div class="col-5 align-self-center">
+                        <h4 class="page-title">Html.MvcSiteMap().SiteMapTitle()</h4>
+                    </div>
+                    <div class="col-7 align-self-center">
+                        <div class="d-flex align-items-center justify-content-end">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item">
+                                        Html.MvcSiteMap().SiteMapPath()
+                                    </li>
+                                    <li class="breadcrumb-item active" aria-current="page"></li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Bread crumb and right sidebar toggle -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid">
+                <!-- ============================================================== -->
+                <!-- Start Page Content -->
+                <!-- ============================================================== -->
+                @RenderBody()
+                <!-- ============================================================== -->
+                <!-- End PAge Content -->
+                <!-- ============================================================== -->
+                <!-- ============================================================== -->
+                <!-- Right sidebar -->
+                <!-- ============================================================== -->
+                <!-- .right-sidebar -->
+                <!-- ============================================================== -->
+                <!-- End Right sidebar -->
+                <!-- ============================================================== -->
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Container fluid  -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- footer -->
+            <!-- ============================================================== -->
+            <footer class="footer text-center">
+                <a>Turan Hoca İNGİLİZCE</a>
+            </footer>
+            <!-- ============================================================== -->
+            <!-- End footer -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Page wrapper  -->
+        <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Wrapper -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- All Jquery -->
+    <!-- ============================================================== -->
+    
+    <script src="~/Scripts/jquery-1.9.1.min.js"></script>
+    <!-- Bootstrap tether Core JavaScript -->
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+
+
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <!-- slimscrollbar scrollbar JavaScript -->
+    <script src="~/assets/extra-libs/sparkline/sparkline.js"></script>
+    <!--Wave Effects -->
+    <script src="~/dist/js/waves.js"></script>
+    <!--Menu sidebar -->
+    <script src="~/dist/js/sidebarmenu.js"></script>
+    <!--Custom JavaScript -->
+
+
+    <script src="~/dist/js/custom.min.js"></script>
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>

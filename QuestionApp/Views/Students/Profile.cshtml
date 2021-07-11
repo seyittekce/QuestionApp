@@ -1,0 +1,141 @@
+﻿@model QuestionApp.Models.Students
+@{
+    ViewBag.Title = Model.FirsName + " " + Model.LastName + " " + "Profili";
+    Layout = "~/Views/Shared/StudentLayout.cshtml";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-lg-4 col-xlg-3 col-md-5">
+            <div class="card">
+                <div class="card-body">
+                    <center class="m-t-30">
+                        <img src="../../assets/images/users/blank.png" class="rounded-circle" width="150">
+                        <h4 class="card-title m-t-10">@Model.FirsName @Model.LastName</h4>
+                    </center>
+                </div>
+                <div>
+                    <hr>
+                </div>
+                <div class="card-body">
+                    <small class="text-muted">Kullanıcı Adı </small>
+                    <h6>@Model.NickName</h6>
+                    <small class="text-muted p-t-30 db">E-mail Adresi</small>
+                    <h6>@Model.Mail</h6>
+                    <small class="text-muted p-t-30 db">Telefon Numarası</small>
+                    <h6>@Model.PhoneNumber</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8 col-xlg-9 col-md-7">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Şifre Değiştir</h4>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Eski Şifreniz</label>
+                        <input type="password" required class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Eski Şifrenizi Girin" name="eski_sifre">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">Yeni Şifre </label>
+                        <input type="password" required class="form-control" id="password" placeholder="Yeni Şifre" name="yeni_sifre">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">Tekrar Yeni Şifrenizi Giriniz </label>
+                        <input type="password" required class="form-control" id="confirm_password" placeholder="Yeni Şifre Tekrar" name="yeni_sifre2">
+                    </div>
+                    <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#exampleModal">
+                        Kaydet
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">   Şifrenizi değiştirmek istediğinize emin misiniz?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Şifrenizi değiştirmek istediğinize emin misiniz?
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" value="Kaydet" class="btn btn-success" />
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<link href="~/Content/sweetalert2.css" rel="stylesheet" />
+@section Scripts {
+    <script src="~/js/sweetalert2.js"></script>
+    @if (TempData["sifre_degistirildi"] == "true")
+    {
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Şifre Değiştirildi',
+                text: 'Şifre Başarı ile değiştirildi',
+            })
+        </script>
+    }
+
+    @if (TempData["sifre_degistirildi"] == "false")
+    {
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Şifre Kriterlere Uymuyor',
+                text: 'bir küçük harf </br>bir büyük Harf </br> bir rakam olmak zorundadır ',
+            })
+        </script>
+    }
+    @if (TempData["eski_sifre"] == "false")
+    {
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Eski şifreler uyuşmuyor',
+                text: 'Eski şifrenizle girdiğiniz şifre aynı değil!',
+            })
+        </script>
+    }
+    @if (TempData["Error"] == "Hata")
+    {
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'HATA',
+                text: 'Bir hata oluştu. Tekrar Deneyiniz'
+            })
+        </script>
+    }
+    @if (TempData["First"] != null)
+    {
+<script>
+    Swal.fire({
+        icon: 'error',
+        title: 'İlk Girişiniz Lütfen Şifrenizi Değiştiriniz',
+        text: ''
+    })
+</script>
+    }
+    <script>
+        var password = document.getElementById("password")
+            , confirm_password = document.getElementById("confirm_password");
+        function validatePassword() {
+            if (password.value != confirm_password.value) {
+                confirm_password.setCustomValidity("Passwords Don't Match");
+            } else {
+                confirm_password.setCustomValidity('');
+            }
+        }
+        password.onchange = validatePassword;
+        confirm_password.onkeyup = validatePassword;
+    </script>
+}

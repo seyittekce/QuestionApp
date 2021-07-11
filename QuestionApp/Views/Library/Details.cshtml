@@ -1,0 +1,168 @@
+﻿@model QuestionApp.Models.QuizLibrary
+@{
+    ViewBag.Title = "Details";
+}
+<style>
+    input {
+        border-radius: 25px;
+        padding: 7px 14px;
+        background-color: transparent;
+        border: solid 1px rgba(0, 0, 0, 0.2);
+        width: 200px;
+        box-sizing: border-box;
+        color: #2e2e2e;
+        margin-bottom: 5px
+    }
+
+    input {
+        border-radius: 25px;
+        padding: 7px 14px;
+        background-color: transparent;
+        border: solid 1px rgba(0, 0, 0, 0.2);
+        width: 200px;
+        box-sizing: border-box;
+        color: #2e2e2e;
+        margin-bottom: 5px
+    }
+
+        input:focus {
+            outline: none;
+            border-color: #aaa
+        }
+
+    select {
+        border-radius: 25px;
+        padding: 7px 14px;
+        background-color: transparent;
+        border: solid 1px rgba(0, 0, 0, 0.2);
+        box-sizing: border-box;
+        color: #2e2e2e;
+        margin-bottom: 5px
+    }
+
+    select {
+        border-radius: 25px;
+        padding: 7px 14px;
+        background-color: transparent;
+        border: solid 1px rgba(0, 0, 0, 0.2);
+        box-sizing: border-box;
+        color: #2e2e2e;
+        margin-bottom: 5px
+    }
+
+        select:focus {
+            outline: none;
+            border-color: #aaa
+        }
+</style>
+
+<div class="row">
+    <div class="col-lg-12 col-xlg-12 col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <p>
+                    @Html.ActionLink("< Listeye Geri Dön", "Index")
+                </p>
+                <p style="float:right">
+                    @Html.ActionLink("Düzenle", "Edit", new { id = Model.ID }, new { @class = "btn btn-outline-primary" })
+                    <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#exampleModal">
+                        Sil
+                    </button>
+                </p>
+               
+                <p>
+                    <h4>Soru Kütüphanesi</h4>
+                </p>
+                <hr />
+                <dl class="dl-horizontal">
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Name)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Name)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.MailSend)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.MailSend)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.StartDate)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.StartDate)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.EndDate)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.EndDate)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.CreatedDate)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.CreatedDate)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Questions)
+                    </dt>
+                    <dd id="list">
+                        <div id="hacker-list">
+                           
+                            <ul class="ul list">
+                                @{
+                                    QuestionApp.Models.DBContext db = new QuestionApp.Models.DBContext();
+                                    foreach (var item in Model.Questions.Split('|').ToArray())
+                                    {
+                                        if (item != null)
+                                        {
+                                            int ID = Convert.ToInt32(item);
+
+                                            var bul = db.Question.FirstOrDefault(x => x.ID == ID);
+                                            if (bul != null)
+                                            {
+                                                <li><a href="~/licence/details/@bul.ID" class="name">@bul.Questions</a></li>
+                                            }
+
+                                        }
+                                    }
+                                }
+                            </ul>
+                        </div>
+                    </dd>
+                </dl>
+                <p>      
+                    @Html.ActionLink("< Listeye Geri Dön", "Index")
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>   
+}
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Kaydı silmek istediğinize emin misiniz ?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @Model.Name adlı kaydı silmek istediğinize emin misiniz ?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hayır</button>
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    <input type="submit" value="Evet" class="btn btn-danger" />
+                }
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,27 @@
+﻿@model IEnumerable<QuestionApp.Models.VideAndText>
+@{
+    ViewBag.Title = "Videolar";
+    Layout = "~/Views/Shared/StudentLayout.cshtml";
+}
+
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-sm-6" style="width:560px;height:315px">
+            <div class="card"> 
+                <center>
+                    <div class="card-img-top">@Html.Raw(item.Link)</div>
+                </center>
+                <div class="card-body">
+                    <hr />
+                    <h4 class="card-title text-center">@item.Baslik</h4>
+               
+                    <p class="card-text"><small class="text-muted">@item.dateTime.ToShortDateString()</small></p>
+                 
+                </div>
+            </div>
+        </div>
+    }
+    
+</div>
+

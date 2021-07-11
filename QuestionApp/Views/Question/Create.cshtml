@@ -1,0 +1,178 @@
+﻿@{
+    ViewBag.Title = "Soru Oluştur";
+}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div style="margin-bottom:15px">
+                    @Html.ActionLink("< Listeye Geri Dön", "Index")
+                </div>
+                <ul class="nav nav-tabs customtab" role="tablist">
+                    <li class="nav-item"> <a class="nav-link active" data-toggle="tab" href="#multiple" role="tab"><span class="hidden-sm-up"><i class="fa fa-info"></i></span> <span class="hidden-xs-down">Çoktan Seçmeli</span></a> </li>
+                    <li class="nav-item"> <a class="nav-link " data-toggle="tab" href="#truefalses" role="tab"><span class="hidden-sm-up"><i class="fa fa-barcode"></i></span> <span class="hidden-xs-down">Doğru Yanlış</span></a> </li>
+                    <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#short" role="tab"><span class="hidden-sm-up"><i class="fa fa-ethernet"></i></span> <span class="hidden-xs-down">Kısa Cevaplar</span></a> </li>
+                    <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#paragraf" role="tab"><span class="hidden-sm-up"><i class="fa fa-ethernet"></i></span> <span class="hidden-xs-down">Paragraf Soruları</span></a> </li>
+                    <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#file" role="tab"><span class="hidden-sm-up"><i class="fa fa-ethernet"></i></span> <span class="hidden-xs-down">Dosya Yükle</span></a> </li>
+                </ul>
+                @using (Html.BeginForm("Create", "Question", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="multiple" role="tabpanel">
+                            <div class="p-20">
+                                <div class="form-horizontal">
+                                    <div class="form-group">
+                                        <label class="control-label">Soru</label>
+                                        <div class="col-md-12">
+                                            <textarea name="MultipleQuestion" class="form-control"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label" for="ourField">Cevap</label>
+                                        <div id="myRepeatingFields">
+                                            <div class="entry input-group col-xs-3">
+                                                <input class="form-control" name="fields" type="text" placeholder="Cevap Giriniz" style="margin-bottom:20px" />
+                                                <span class="input-group-btn">
+                                                    <button type="button" class="btn btn-success btn-sm btn-add">
+                                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                                    </button>
+                                                </span>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Doğru Cevabı Yazınız</label>
+                                        <div class="col-md-12">
+                                            <input type="text" name="answers" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Açıklama</label>
+                                        <div class="col-md-12">
+                                            <textarea name="Multipleexp" class="form-control"></textarea>
+                                        </div>
+                                    </div>
+                                    <input type="submit" value="Oluştur" name="multiple" class="btn btn-outline-primary " />
+                                    <br>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="truefalses" role="tabpanel">
+                            <div class="form-horizontal">
+                                <div class="p-20">
+                                    <div class="form-group">
+                                        <label class="control-label">Soru</label>
+                                        <div class="col-md-12">
+                                            <textarea name="trueQuestion" class="form-control"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Doğru/Yanlış</label>  <div class="col-md-12">
+                                            <label class="btn btn-secondary active">
+                                                <input type="radio" name="options" id="true" value="true" class="btn-outline-primary" autocomplete="off" checked> Doğru
+                                            </label>
+                                            <label class="btn btn-secondary">
+                                                <input type="radio" name="options" id="false" value="false" class="btn-outline-danger" autocomplete="off"> Yanlış
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Açıklama</label>
+                                        <div class="col-md-12">
+                                            <textarea name="trueexp" class="form-control"></textarea>
+                                        </div>
+                                    </div>
+                                    <input type="submit" value="Oluştur" name="truefalse" class="btn btn-outline-primary " />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane " id="short" role="tabpanel">
+                            <div class="p-20">
+                                <div class="form-horizontal">
+                                    <div class="form-group">
+                                        <label class="control-label">Soru</label>
+                                        <div class="col-md-12">
+                                            <textarea name="shortQuestion" class="form-control"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Cevap</label>
+                                        <div class="col-md-12">
+                                            <textarea name="shortAnswer" class="form-control"></textarea>
+                                        </div>
+                                        <small>Lütfen Cevapları ','(virgül) ile ayırınız</small>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Açıklama</label>
+                                        <div class="col-md-12">
+                                            <textarea name="shortExplan" class="form-control"></textarea>
+                                        </div>
+                                    </div>
+                                    <input type="submit" value="Oluştur" name="shoranswers" class="btn btn-outline-primary " />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="paragraf" role="tabpanel">
+                            <div class="p-20">
+                                <div class="form-horizontal">
+                                    <div class="form-group">
+                                        <label class="control-label">Soru</label>
+                                        <div class="col-md-12">
+                                            <textarea name="paragraph" class="form-control"></textarea>
+                                        </div>
+                                    </div>
+                                    <input type="submit" value="Oluştur" name="Parag" class="btn btn-outline-primary " />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="file" role="tabpanel">
+                            <div class="p-20">
+                                <div class="form-horizontal">
+                                    <div class="form-group">
+                                        <label class="control-label">Soru</label>
+                                        <div class="col-md-12">
+                                            <textarea name="FileQuestion" class="form-control"></textarea>
+                                        </div>
+                                        <label class="control-label">Dosya Yükle</label>
+                                        <div class="col-md-12">
+                                            <input type="file" class="file" name="FileUpload" />
+                                        </div>
+                                    </div>
+                                    <input type="submit" value="Oluştur" name="File" class="btn btn-outline-primary " />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                <div>
+                    @Html.ActionLink("< Listeye Geri Dön", "Index")
+                </div>
+                @section Scripts {
+                                <script src="~/Scripts/bootstrap.min.js"></script>
+                    @Scripts.Render("~/bundles/jqueryval")
+                    <script>
+                        $(function () {
+                            $(document).on('click', '.btn-add', function (e) {
+                                e.preventDefault();
+                                var controlForm = $('#myRepeatingFields:first'),
+                                    currentEntry = $(this).parents('.entry:first'),
+                                    newEntry = $(currentEntry.clone()).appendTo(controlForm);
+                                newEntry.find('input').val('');
+                                controlForm.find('.entry:not(:last) .btn-add')
+                                    .removeClass('btn-add').addClass('btn-remove')
+                                    .removeClass('btn-success').addClass('btn-danger')
+                                    .html('');
+                            }).on('click', '.btn-remove', function (e) {
+                                e.preventDefault();
+                                $(this).parents('.entry:first').remove();
+                                return false;
+                            });
+                        });
+                    </script>
+                }
+            </div>
+        </div>
+    </div>
+</div>

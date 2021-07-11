@@ -1,0 +1,104 @@
+﻿<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Jekyll v3.8.6">
+    <title>Exam</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+    <link href="~/Content/sweetalert2.css" rel="stylesheet" />
+    <link href="~/css/style.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <!-- Favicons -->
+</head>
+<body onload="ColorChange()">
+    @model QuestionApp.Models.Question
+    @{
+        QuestionApp.Models.DBContext db = new QuestionApp.Models.DBContext();
+        ViewBag.Title = "Exam";
+        Layout = null;
+        var StudentAnswer = ViewBag.studentAnswer;
+    }
+            <div class="container">
+                <div class="jumbotron">
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        <h1>@Model.Questions</h1>
+                        if (Model.Type == "multiple")
+                        {
+                            string[] Answer = Model.Answers.Split('|').ToArray();
+                            foreach (var item in Answer)
+                            {
+                                <label>
+                                    <input id="@item" name="selector" type="radio" value="@item" />
+                                    <i></i>
+                                    <span>@item</span>
+                                </label>
+                            }
+                        }
+                        if (Model.Type == "truefalse")
+                        {
+                            <label>
+                                <input type="radio" id="true" name="selector" value="true" />
+                                <i></i>
+                                <span>True</span>
+                            </label>
+                            <label>
+                                <input type="radio" id="false" name="selector" value="true" />
+                                <i></i>
+                                <span>False</span>
+                            </label>
+                        }
+                        if (Model.Type == "short")
+                        {
+                            <textarea id="text" name="selector" rows="5" style="overflow: hidden; word-wrap: break-word; resize: none; height: 160px;  margin-bottom:50px" placeholder="Cevabı buraya yazın"></textarea>
+                        }
+                        if (Model.Type == "Paragraph")
+                        {
+                            <textarea id="text" name="selector" rows="5" style="overflow: hidden; word-wrap: break-word; resize: none; height: 200px; margin-bottom:50px"  placeholder="Cevabı buraya yazın"></textarea>
+                        }
+                        <button class="square_btn" name="Next">İleri</button>
+                    }
+                </div>
+            </div>
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script src="~/js/sweetalert2.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#title').focus();
+            $('#text').autosize();
+        });
+    </script>
+    @if (TempData["Answer"] == "True")
+    {
+        <script>
+            Swal.fire({
+               imageUrl: '/turanbek.png',
+                imageWidth: 150,
+                imageHeight: 150,
+                title: 'Doğru Cevapladınız',
+                width:20%,
+                text: '@TempData["Explain"]',})
+        </script>
+    }
+    @if (TempData["Answer"] == "False")
+    {
+        <script>
+            Swal.fire({
+                icon: 'error',
+                    width:20%,
+                title: 'Yanlış Cevapladınız',
+                text: '@TempData["Explain"]',})
+        </script>
+    }
+    <script>
+        function ColorChange() {
+            var color = ["#5499C7", "#D7BDE2", "#FFC300", "#DAF7A6", "#CD6155", "#7F8C8D"]
+            var ss = Math.floor(Math.random() * 6);
+            document.body.style.backgroundColor = color[ss];
+        }
+    </script>
+</body>
+</html>

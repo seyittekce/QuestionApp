@@ -1,0 +1,87 @@
+﻿@model QuestionApp.Models.Question
+@{
+    ViewBag.Title = "Details";
+}
+@{
+    char bg = 'A';
+    int a = 0;
+}
+<div class="row">
+    <div class="col-12 col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <p style="float:right">
+                    @{
+                    
+                        <button type="button" class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#exampleModal">
+                            Sil
+                        </button>                  
+                    }
+                </p>
+                @Html.ActionLink("< Listeye Geri Dön", "Index")
+                <h2>@Model.Questions</h2>
+                <hr />
+                <div style="margin-left:25px">
+                    @if (Model.Type == "multiple")
+                    {
+                        foreach (var item in ViewBag.da)
+                        {
+                            <h4>@bg)@item</h4>
+                            bg++;
+                        }
+                        <br />
+                        <h5><b>Doğru Cevap:</b>@Model.answers1</h5>
+                    }
+                    @if (Model.Type == "truefalse")
+                    {
+                        <h3>@Model.Answers</h3>
+                    }
+                    @if (Model.Type == "short")
+                    {
+                        <h3>Cevaplar</h3>
+                        <div style="margin-left:25px">
+                            @foreach (var item in ViewBag.shorta)
+                            {
+                                if (item != "")
+                                {
+                                    a++;
+                                    <h4>@a)@item</h4>
+                                }
+                            }
+                        </div>
+                    }
+                    @if (Model.Type == "File")
+                    {
+                        <label>İndir</label>
+                        <a href="~/Document/@Model.Answers">@Model.Answers</a>
+                    }
+                </div>
+                <br />
+                <h5>Açıklama:@Model.Explanation</h5>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Kaydı silmek istediğinize emin misiniz ?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @Model.Name adlı soruyu silmek istediğinize emin misiniz ?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hayır</button>
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    <input type="submit" value="Evet" class="btn btn-danger" />
+                }
+            </div>
+        </div>
+    </div>
+</div>

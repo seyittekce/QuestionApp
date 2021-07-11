@@ -1,0 +1,261 @@
+﻿@model QuestionApp.Models.Class
+@{
+    ViewBag.Title = "Details";
+}
+<style>
+    td {
+        white-space: nowrap;
+        overflow: hidden;
+        -o-text-overflow: ellipsis;
+        -ms-text-overflow: ellipsis;
+        text-overflow: ellipsis;
+        max-width: 200px;
+    }
+    input {
+        border-radius: 25px;
+        padding: 7px 14px;
+        background-color: transparent;
+        border: solid 1px rgba(0, 0, 0, 0.2);
+        width: 200px;
+        box-sizing: border-box;
+        color: #2e2e2e;
+        margin-bottom: 5px
+    }
+    input {
+        border-radius: 25px;
+        padding: 7px 14px;
+        background-color: transparent;
+        border: solid 1px rgba(0, 0, 0, 0.2);
+        width: 200px;
+        box-sizing: border-box;
+        color: #2e2e2e;
+        margin-bottom: 5px
+    }
+        input:focus {
+            outline: none;
+            border-color: #aaa
+        }
+    select {
+        border-radius: 25px;
+        padding: 7px 14px;
+        background-color: transparent;
+        border: solid 1px rgba(0, 0, 0, 0.2);
+        box-sizing: border-box;
+        color: #2e2e2e;
+        margin-bottom: 5px
+    }
+    select {
+        border-radius: 25px;
+        padding: 7px 14px;
+        background-color: transparent;
+        border: solid 1px rgba(0, 0, 0, 0.2);
+        box-sizing: border-box;
+        color: #2e2e2e;
+        margin-bottom: 5px
+    }
+        select:focus {
+            outline: none;
+            border-color: #aaa
+        }
+</style>
+<div class="row">
+    <div class="col-12 col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <p>
+                    @Html.ActionLink("< Listeye Geri Dön", "Index")
+                </p>
+                <div>
+                    <h4>@Html.DisplayFor(model => model.Name)</h4>
+                    <hr />
+                    <dl class="dl-horizontal">
+                        <dt>
+                            @Html.DisplayNameFor(model => model.QuizLib)
+                        </dt>
+                        <dd>
+                            @{
+                                QuestionApp.Models.DBContext db = new QuestionApp.Models.DBContext();
+                                if (Model.QuizLib != "" && Model.QuizLib != null)
+                                {
+                                    foreach (var item in Model.QuizLib.Split('|'))
+                                    {
+                                        if (item != null)
+                                        {
+                                            int i = Convert.ToInt32(item);
+                                            var bul = db.QuizLibrary.FirstOrDefault(x => x.ID == i);
+                                            <a href="~/Classes/StudentResult/@bul.ID/@Model.ID" target="_blank">@bul.Name</a>
+                                            <br />
+                                        }
+                                    }
+                                }
+                            }
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.CratedDate)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.CratedDate)
+                        </dd>
+                    </dl>
+                </div>
+                @{
+                    @Html.ActionLink("Düzenle", "Edit", new { id = Model.ID }, new { @class = "btn btn-outline-primary btn-md" })
+                    <button type="button" class="btn btn-outline-danger btn float-right" data-toggle="modal" data-target="#exampleModal">
+                        Sil
+                    </button>
+                    <p>
+                        @Html.ActionLink("< Listeye Geri Dön", "Index")
+                    </p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Kaydı silmek istediğinize emin misiniz ?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @Model.Name adlı Sınıfı silmek istediğinize emin misiniz ?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hayır</button>
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    <input type="submit" value="Evet" class="btn btn-danger" />
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12 col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <table id="datatable" class="table tables table-hover table-sm " style="width: 100%;" role="grid" aria-describedby="scroll_ver_dynamic_hei_info">
+                    <thead>
+                        <tr>
+                            <th>
+                                Öğrenci Adı
+                            </th>
+                            <th>
+                                Aldığı Puan
+                            </th>
+                            <th>İncele</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            if (!string.IsNullOrEmpty(Model.Students))
+                            {
+                                foreach (var item in Model.Students.Split('|'))
+                                {
+                                    if (item != null)
+                                    {
+                                        int ID = Convert.ToInt32(item);
+                                        int QuizID = Convert.ToInt32(Model.QuizLib);
+                                        var bul = db.Students.FirstOrDefault(x => x.ID == ID);
+                                        var PaunAl = db.Answers.FirstOrDefault(x => x.StudentID == ID && x.LibraryID == QuizID);
+                                        <tr>
+                                            <td>  <a href="~/StudentsOps/Details/@bul.ID" target="_blank">@bul.FirsName @bul.LastName</a></td>
+                                            @if (PaunAl != null)
+                                            {
+                                                <td>@PaunAl.TotalPoint</td>
+                                                <td>
+                                                    @Html.ActionLink("Detaylar", "Result", "Classes", new { QuizID = QuizID, StudentID = bul.ID, Answer = PaunAl.ID },
+    new { target = "_blank" })
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td>0</td>
+                                                <td></td>
+                                            }
+                                        </tr>
+                                    }
+                                }
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<link href="~/Content/toastr.min.css" rel="stylesheet" />
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+    @Scripts.Render("~/bundles/Datatable")
+    <script src="~/Scripts/toastr.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#datatable').DataTable({
+                "language": {
+                    "url": "/Scripts/Turkish.json"
+                },
+                "dom": ' <"search"f><"bottom"l>rt<"bottom"ip><"clear"><"top"B>',
+                buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        exportOptions:
+                        {
+                            columns: [0, 1, 2],
+                        },
+                        text: '<i class="fa fa-file-excel-o"></i>',
+                        titleAttr: 'Excel',
+                        className: 'btn btn-outline-secondary'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        pageSize: 'LEGAL',
+                        exportOptions:
+                        {
+                            columns: [0, 1, 2],
+                        },
+                        text: '<i class="fa fa-file-pdf-o"></i>',
+                        titleAttr: 'PDF',
+                        className: 'btn btn-outline-secondary'
+                    },
+                    {
+                        text: '<b>Sınıf Oluştur</b>',
+                        action: function (e, dt, button, config) {
+                            window.location = '/Classes/Create';
+                        },
+                        className: 'btn btn-outline-info'
+                    },
+                ]
+            });
+        });
+    </script>
+    @if (TempData["Message"] != null)
+    {
+        <script type="text/javascript">
+            $(document).ready(function () {
+                Command: toastr["success"]("Kayıt Silindi", "Kayıt Silindi")
+                toastr.options = {
+                    "closeButton": true,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": false,
+                    "positionClass": "toast-bottom-right",
+                    "preventDuplicates": false,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                }
+            })
+        </script>
+    }
+}

@@ -1,0 +1,91 @@
+﻿@model QuestionApp.Models.Settings
+@{
+    ViewBag.Title = "Mail Ayarları";
+}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                @using (Html.BeginForm())
+                {
+                    <h4>Mail Sunucu Adresi</h4>
+                    <hr />
+                    <div class="form-group row">
+                        <label for="example-number-input" class="col-2 col-form-label">Host</label>
+                        <div class="col-10">
+                            @Html.EditorFor(model => model.Host, new { htmlAttributes = new { @class = "form-control", @required = "" } })
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="example-number-input" class="col-2 col-form-label">Port</label>
+                        <div class="col-10">
+                            @Html.EditorFor(model => model.Port, new { htmlAttributes = new { @class = "form-control", @required = "" } })
+                        </div>
+                    </div>
+                    <hr />
+                    <h4 class="card-title">Kimlik Bilgileri</h4>
+                    <h5 class="card-subtitle">Mail Sunucusuna ait mail bilgileri</h5>
+                    <hr />
+                    <div class="form-group row">
+                        <label for="example-number-input" class="col-2 col-form-label">Kullanıcı Adı</label>
+                        <div class="col-10">
+                            @Html.EditorFor(model => model.User_Name, new { htmlAttributes = new { @class = "form-control", @required = "", @placeholder = "x@rmkmarine.local" } })
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="example-number-input" class="col-2 col-form-label">Şifre</label>
+                        <div class="col-10">
+                            @Html.EditorFor(model => model.User_password, new { htmlAttributes = new { @class = "form-control", @required = "", @type = "password" } })
+                        </div>
+                    </div>
+                    <hr />
+                    <h4 class="card-title">Mail Gönderim Süresi</h4>
+                    <h5 class="card-subtitle"> Mail uyarı süreleri</h5>
+                    <hr />
+                    <div class="form-group row">
+                        <label for="example-number-input" class="col-2 col-form-label">İlk Uyarı Süresi</label>
+                        <div class="col-10">
+                            @Html.EditorFor(model => model.First, new { htmlAttributes = new { @class = "form-control", @type = "number", @required = "" } })
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="example-number-input" class="col-2 col-form-label">İkini Uyarı Süresi</label>
+                        <div class="col-10">
+                            @Html.EditorFor(model => model.Seccond, new { htmlAttributes = new { @class = "form-control", @type = "number", @required = "" } })
+                        </div>
+                    </div>
+                    <input type="submit" value="Kaydet" class="btn btn-outline-primary" />
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<link href="~/Content/toastr.min.css" rel="stylesheet" />
+@section Scripts {
+    <script src="~/Scripts/toastr.min.js"></script>
+    <script>
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": false,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        }
+    </script>
+    @if (TempData["oldu"] == "true")
+    {
+        <script>
+            Command: toastr["success"]("@TempData["olusturuldu"]", "Mail ayarları güncelleştirildi")
+        </script>
+    }
+}

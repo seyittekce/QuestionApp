@@ -1,0 +1,110 @@
+﻿@{
+    ViewBag.Title = "Dashboard";
+    QuestionApp.Models.DBContext db = new QuestionApp.Models.DBContext();
+    Layout = "~/Views/Shared/StudentLayout.cshtml";
+}
+<link href="~/Content/sweetalert2.css" rel="stylesheet" />
+<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+<div class="container">
+    <div class="page-header">
+        <h2>Sınavlarınız </h2>
+    </div>
+    @foreach (string item in ViewBag.kutup)
+    {
+        if (item != null)
+        {
+            string[] Libs = item.Split('|').ToArray();
+            foreach (var Lib in Libs)
+            {
+                QuestionApp.Models.Class ClassFinder = null;
+                int ID = Convert.ToInt32(Lib);
+                //bu öğrenci bu sınıfa kayıtlı mı k ?
+                var FindLib = db.QuizLibrary.FirstOrDefault(x => x.ID == ID);
+                ClassFinder = null;
+                var Answer = db.Answers.Where(x=>x.StudentID== QuestionApp.Models.Addon.StudentSide.ID&&x.LibraryID==ID).FirstOrDefault();
+                foreach (var FinderClasser in db.Class.ToList())
+                {
+                    string[] StudentsFinder = FinderClasser.Students.Split('|').ToArray();
+                    foreach (var Find in StudentsFinder)
+                    {
+                        if (Find != null)
+                        {
+                            if (QuestionApp.Models.Addon.StudentSide.ID == Convert.ToInt32(Find))
+                            {
+                                ClassFinder = db.Class.Where(x => x.ID == FinderClasser.ID).FirstOrDefault();
+                            }
+                        }
+                    }
+                }
+                if (FindLib != null)
+                {
+                    DateTime SonTarih = ClassFinder.EndDate;
+                    string[] Questions = FindLib.Questions.Split('|').ToArray();
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12">
+                            <div class="card text-center">
+                                <div class="card-header">
+                                    @if (DateTime.Compare(DateTime.Now, SonTarih) < 0)
+            {
+                                        <strong>
+                                            <span class="text-success float-left">Aktif</span>
+                                            <a>@FindLib.Name</a>
+                                            <span class="float-right disabled">#@FindLib.ID</span>
+                                        </strong>
+                                    }
+                                    else
+                                    {<strong>
+                                            <span class="text-danger float-left">Kapalı</span>
+                                            <span class="muted">@FindLib.Name</span>
+                                        </strong>
+                                    }
+                                </div>
+                                <div class="card-body">
+                                    <div class="mx-auto d-block">
+                                        @if (DateTime.Compare(DateTime.Now, SonTarih) < 0)
+                                        {
+                                            if (Answer == null)
+                                            {
+                                                @Html.ActionLink("Sınava Başla", "Exam", new { LibraryID = FindLib.ID, QuestionID = 0 }, new { @class = "btn btn-outline-success float-right" })
+                                            }
+                                            else
+                                            {
+                                                @Html.ActionLink("Cevapları Göster", "Exam", new { LibraryID = FindLib.ID, QuestionID = 0 }, new { @class = "btn btn-outline-success float-right" })
+                                            }
+
+
+
+                                        }
+                                        <p class="card-text">@FindLib.Comment</p>
+                                    </div>
+                                </div>
+                                <div class="card-footer text-muted">
+                                    @ClassFinder.StartDate.ToShortDateString()
+                                    - @ClassFinder.EndDate.ToShortDateString()
+                                    <h5 class="card-title float-right">   @Questions.Count() Soru</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                }
+                else
+                {
+                    <div id="take-survey" class="tab-pane active">
+                        <div class="row">
+                            <div class="span9">
+                                <h4>
+                                    Aktif Sınavınız Yok
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        }
+    }
+</div>
+@section Scripts {
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script src="~/js/sweetalert2.js"></script>
+}

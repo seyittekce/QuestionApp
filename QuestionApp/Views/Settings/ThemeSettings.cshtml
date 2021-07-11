@@ -1,0 +1,92 @@
+﻿@model QuestionApp.Models.Settings
+@{
+    ViewBag.Title = "ThemeSettings";
+}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                @using (Html.BeginForm("ThemeSettings", "Settings", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    <h4>Tema Ayarları</h4>
+                    <hr />
+                    <div class="form-group row">
+                        <label for="example-number-input" class="col-2 col-form-label">Menü Konumu</label>
+                        <div class="col-10">
+                            @Html.DropDownListFor(model => model.Layout, new SelectList(ViewBag.topbar, "number", "name"), new { @class = "form-control", @id = "kulls" })
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="example-number-input" class="col-2 col-form-label">Üst Menu Rengi</label>
+                        <div class="col-10">
+                            @Html.DropDownListFor(model => model.Navbar_Background, new SelectList(ViewBag.sidebar, "number", "name"), new { @class = "form-control", @id = "kulls" })
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="example-number-input" class="col-2 col-form-label">Yan Menu Rengi</label>
+                        <div class="col-10">
+                            @Html.DropDownListFor(model => model.Sidebar_Background, new SelectList(ViewBag.sidebar, "number", "name"), new { @class = "form-control", @id = "kulls" })
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="example-number-input" class="col-2 col-form-label">Logo Rengi</label>
+                        <div class="col-10">
+                            @Html.DropDownListFor(model => model.Logo_Background, new SelectList(ViewBag.sidebar, "number", "name"), new { @class = "form-control", @id = "kulls" })
+                        </div>
+                    </div>
+                    <div class="form-group row" style="margin-right:40px">
+                        <label for="example-number-input" class="col-2 col-form-label">Logo İmajı</label>
+                        <div class="col-md-10 float-right form-group">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Yükle</span>
+                                </div>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="Logo" name="Logo">
+                                    <label class="custom-file-label" for="Logo">Dosya Seç</label>
+                                </div>
+                            </div>
+                            @Html.ValidationMessageFor(model => model.Logo, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="example-number-input" class="col-2 col-form-label">Pre Loader</label>
+                        <div class="col-10">
+                            @Html.EditorFor(model => model.Preloader, new { @class = "form-control", @id = "kulls" })
+                        </div>
+                    </div>
+                    <input type="submit" value="Kaydet" class="btn btn-outline-primary" />
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<link href="~/Content/toastr.min.css" rel="stylesheet" />
+@section Scripts {
+    <script src="~/Scripts/toastr.min.js"></script>
+    <script>
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": false,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        }
+    </script>
+    @if (TempData["oldu"] == "true")
+    {
+        <script>
+            Command: toastr["success"]("@TempData["olusturuldu"]", "Tema ayarları güncelleştirildi")
+        </script>
+    }
+}
